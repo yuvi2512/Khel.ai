@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const GlobeComponent = () => {
   const [hoveredPin, setHoveredPin] = useState(null);
@@ -69,7 +70,7 @@ const GlobeComponent = () => {
         }}
       >
         <div style={{ position: "relative", width: "100vw" }}>
-          {/* Globe Image - Lazy Loaded */}
+          {/* Globe Image */}
           <img
             src={globeImage}
             alt="Half Globe"
@@ -83,6 +84,7 @@ const GlobeComponent = () => {
             }}
           />
 
+          {/* Markers */}
           {markers.map((marker) => (
             <div
               key={marker.id}
@@ -107,73 +109,93 @@ const GlobeComponent = () => {
                 }}
               />
 
-              {hoveredPin?.id === marker.id && (
-                <Suspense fallback={<div style={{ color: "white" }}>Loading...</div>}>
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "calc(60% + 15px)",
-                      left: "5%",
-                      transform: "translateX(-80%)",
-                      marginTop: "15px",
-                      background: "#1a1a1a",
-                      color: "#333",
-                      padding: "10px 5px",
-                      borderRadius: "16px",
-                      pointerEvents: "none",
-                      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
-                      width: "180px",
-                      height: "200px",
-                      backdropFilter: "blur(10px)",
-                      zIndex: 10,
-                      animation: "fadeIn 0.3s ease",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <img
-                      src={hoveredPin.img}
-                      alt={hoveredPin.name}
-                      loading="lazy"
-                      decoding="async"
-                      style={{
-                        width: "100%",
-                        height: "150px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                        objectPosition: "top center",
-                        marginBottom: "8px",
+              <AnimatePresence>
+                {hoveredPin?.id === marker.id && (
+                  <Suspense fallback={<div style={{ color: "white" }}>Loading...</div>}>
+                    <motion.div
+                      key={marker.id}
+                      initial={{ opacity: 0, y: 20, scale: 0.85 }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: {
+                          duration: 0.4,
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 20,
+                        },
                       }}
-                    />
+                      exit={{
+                        opacity: 0,
+                        y: 15,
+                        scale: 0.9,
+                        transition: { duration: 0.25 },
+                      }}
+                      style={{
+                        position: "absolute",
+                        bottom: "calc(60% + 15px)",
+                        left: "5%",
+                        transform: "translateX(-80%)",
+                        background: "#1a1a1a",
+                        color: "#fff",
+                        padding: "10px 5px",
+                        borderRadius: "16px",
+                        pointerEvents: "none",
+                        boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
+                        width: "180px",
+                        height: "200px",
+                        backdropFilter: "blur(10px)",
+                        zIndex: 10,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        src={hoveredPin.img}
+                        alt={hoveredPin.name}
+                        loading="lazy"
+                        decoding="async"
+                        style={{
+                          width: "100%",
+                          height: "150px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                          objectPosition: "top center",
+                          marginBottom: "8px",
+                        }}
+                      />
 
-                    <div style={{ padding: "0 10px", textAlign: "left" }}>
-                      <div
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          color: "white",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        {hoveredPin.name}
+                      <div style={{ padding: "0 10px", textAlign: "left" }}>
+                        <div
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            color: "white",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {hoveredPin.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "13px",
+                            color: "#bbb",
+                            marginBottom: "3px",
+                          }}
+                        >
+                          {hoveredPin.country}
+                        </div>
                       </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          color: "#bbb",
-                          marginBottom: "3px",
-                        }}
-                      >
-                        {hoveredPin.country}
-                      </div>
-                    </div>
-                  </div>
-                </Suspense>
-              )}
+                    </motion.div>
+                  </Suspense>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
       </section>
 
+      {/* Bottom Section */}
       <section
         style={{
           background: "#000",
