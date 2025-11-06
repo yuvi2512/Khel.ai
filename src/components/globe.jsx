@@ -70,7 +70,7 @@ const GlobeComponent = () => {
         }}
       >
         <div style={{ position: "relative", width: "100vw" }}>
-          {/* Globe Image */}
+       
           <img
             src={globeImage}
             alt="Half Globe"
@@ -84,7 +84,6 @@ const GlobeComponent = () => {
             }}
           />
 
-          {/* Markers */}
           {markers.map((marker) => (
             <div
               key={marker.id}
@@ -134,8 +133,8 @@ const GlobeComponent = () => {
                       }}
                       style={{
                         position: "absolute",
-                        bottom: "calc(60% + 15px)",
-                        left: "5%",
+                        bottom: "calc(10% + 15px)",
+                        right:"5%",
                         transform: "translateX(-80%)",
                         background: "#1a1a1a",
                         color: "#fff",
@@ -195,7 +194,6 @@ const GlobeComponent = () => {
         </div>
       </section>
 
-      {/* Bottom Section */}
       <section
         style={{
           background: "#000",
