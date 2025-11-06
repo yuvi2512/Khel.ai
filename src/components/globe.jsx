@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 const GlobeComponent = () => {
@@ -39,7 +39,7 @@ const GlobeComponent = () => {
       top: "64%",
       left: "55%",
       city: "Nagrig",
-      name: "Mohamed Salah ",
+      name: "Mohamed Salah",
       country: "Egypt",
       img: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mohamed_Salah_2018.jpg",
     },
@@ -68,15 +68,13 @@ const GlobeComponent = () => {
           background: "radial-gradient(circle at 50% 60%, #000 60%, #020202)",
         }}
       >
-        <div
-          style={{
-            position: "relative",
-            width: "100vw",
-          }}
-        >
+        <div style={{ position: "relative", width: "100vw" }}>
+          {/* Globe Image - Lazy Loaded */}
           <img
             src={globeImage}
             alt="Half Globe"
+            loading="lazy"
+            decoding="async"
             style={{
               width: "100%",
               height: "100%",
@@ -110,67 +108,66 @@ const GlobeComponent = () => {
               />
 
               {hoveredPin?.id === marker.id && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "calc(60% + 15px)",
-                    left: "5%",
-                    transform: "translateX(-80%)",
-                    marginTop: "15px",
-                    background: "#1a1a1a",
-                    color: "#333",
-                    padding: "10px 5px",
-                    borderRadius: "16px",
-                    pointerEvents: "none",
-                    boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
-                    width: "180px",
-                    height: "200px",
-                    backdropFilter: "blur(10px)",
-                    zIndex: 10,
-                    animation: "fadeIn 0.3s ease",
-                    overflow: "hidden",
-                  }}
-                >
-                  <img
-                    src={hoveredPin.img}
-                    alt={hoveredPin.name}
-                    style={{
-                      width: "100%",
-                      height: "150px",
-                      borderRadius: "10px",
-                      objectFit: "cover",
-                      objectPosition: "top center",
-                      marginBottom: "8px",
-                    }}
-                  />
-
+                <Suspense fallback={<div style={{ color: "white" }}>Loading...</div>}>
                   <div
                     style={{
-                      padding: "0 10px",
-                      textAlign: "left",
+                      position: "absolute",
+                      bottom: "calc(60% + 15px)",
+                      left: "5%",
+                      transform: "translateX(-80%)",
+                      marginTop: "15px",
+                      background: "#1a1a1a",
+                      color: "#333",
+                      padding: "10px 5px",
+                      borderRadius: "16px",
+                      pointerEvents: "none",
+                      boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3)",
+                      width: "180px",
+                      height: "200px",
+                      backdropFilter: "blur(10px)",
+                      zIndex: 10,
+                      animation: "fadeIn 0.3s ease",
+                      overflow: "hidden",
                     }}
                   >
-                    <div
+                    <img
+                      src={hoveredPin.img}
+                      alt={hoveredPin.name}
+                      loading="lazy"
+                      decoding="async"
                       style={{
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        color: "white",
-                        marginBottom: "4px",
+                        width: "100%",
+                        height: "150px",
+                        borderRadius: "10px",
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        marginBottom: "8px",
                       }}
-                    >
-                      {hoveredPin.name}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "13px",
-                        color: "#bbb",
-                        marginBottom: "3px",
-                      }}
-                    >
-                      {hoveredPin.country}
+                    />
+
+                    <div style={{ padding: "0 10px", textAlign: "left" }}>
+                      <div
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "white",
+                          marginBottom: "4px",
+                        }}
+                      >
+                        {hoveredPin.name}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "13px",
+                          color: "#bbb",
+                          marginBottom: "3px",
+                        }}
+                      >
+                        {hoveredPin.country}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Suspense>
               )}
             </div>
           ))}
